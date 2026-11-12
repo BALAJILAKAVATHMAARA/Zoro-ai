@@ -138,16 +138,18 @@ private fun torch(on: Boolean): String {
         val id = cm.cameraIdList.firstOrNull {
             cm.getCameraCharacteristics(it)
                 .get(CameraCharacteristics.FLASH_INFO_AVAILABLE) == true
-        } ?: return "This phone has no flashlight."
+        }
 
-        cm.setTorchMode(id, on)
-        torchOn = on
+        if (id == null) {
+            "This phone has no flashlight."
+        } else {
+            cm.setTorchMode(id, on)
+            torchOn = on
 
-        if (on) "Flashlight on." else "Flashlight off."
-
+            if (on) "Flashlight on." else "Flashlight off."
+        }
     } catch (e: Exception) {
         "I couldn't control the flashlight."
     }
-}
-0
+}0
 
