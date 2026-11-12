@@ -20,7 +20,7 @@ class CommandHandler(private val ctx: Context) {
     private var torchOn = false
 
     private val apps = mapOf(
-        "whatsapp" to "com.whatsapp",
+sed -n '55,95p' app/src/main/java/com/zoro/ai/commands/CommandHandler.kt        "whatsapp" to "com.whatsapp",
         "instagram" to "com.instagram.android",
         "youtube" to "com.google.android.youtube",
         "chrome" to "com.android.chrome",
@@ -127,5 +127,27 @@ class CommandHandler(private val ctx: Context) {
     private fun battery(): String {
         val bm = ctx.getSystemService(Context.BATTERY_SERVICE) as BatteryManager
         return "Battery is at ${bm.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY)} percent."
+ }
+}
+private fun torch(on: Boolean): String
+
+private fun torch(on: Boolean): String {
+    return try {
+        val cm = ctx.getSystemService(Context.CAMERA_SERVICE) as CameraManager
+
+        val id = cm.cameraIdList.firstOrNull {
+            cm.getCameraCharacteristics(it)
+                .get(CameraCharacteristics.FLASH_INFO_AVAILABLE) == true
+        } ?: return "This phone has no flashlight."
+
+        cm.setTorchMode(id, on)
+        torchOn = on
+
+        if (on) "Flashlight on." else "Flashlight off."
+
+    } catch (e: Exception) {
+        "I couldn't control the flashlight."
     }
 }
+0
+
